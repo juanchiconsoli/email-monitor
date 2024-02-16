@@ -1,0 +1,21 @@
+{
+    "clients": [
+        {
+            "name": "Client 1",
+            "email": "client1@backup.com"
+        },
+        {
+            "name": "Client 2",
+            "email": "client2@backup.com"
+        },
+        {
+            "name": "Client 3",
+            "email": "client3@backup.com"
+        }
+    ],
+    "email":{
+        "server": "ssl0.ovh.net",
+        "email": "backup@test.com",
+        "password": "MySecurePassword"
+    }
+}
