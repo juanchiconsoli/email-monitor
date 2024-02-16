@@ -209,7 +209,43 @@ def _build_results_table(results: Dict[str, List[EmailBackup]]):
 
 def _build_html_results_table(results: Dict[str, List[EmailBackup]]) -> str:
 
-    report_html = "<html><body><h1>Rapport des Sauvegardes</h1><br><br>"
+    head = """<head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Rapport des Sauvegardes</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    h1 {
+                        text-align: center;
+                        margin-top: 20px;
+                    }
+                    table {
+                        width: 80%;
+                        border-collapse: collapse;
+                        margin: 20px auto;
+                    }
+                    th, td {
+                        border: 1px solid #ddd;
+                        padding: 8px;
+                        text-align: left;
+                    }
+                    th {
+                        background-color: #f2f2f2;
+                    }
+                    tr:nth-child(even) {
+                        background-color: #f2f2f2;
+                    }
+                    tr:hover {
+                        background-color: #ddd;
+                    }
+                </style>
+            </head>"""
+
+    report_html = f"<html>{head}<body><h1>Rapport des Sauvegardes</h1><br><br>"
 
     report_html = (
         report_html
