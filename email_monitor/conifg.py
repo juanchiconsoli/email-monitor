@@ -17,7 +17,7 @@ class Config:
 
     def __init__(self) -> None:
         self._config_file = Path(
-            os.environ.get("EMAIL_MONITOR_CONFIG", "./clients.json")
+            os.environ.get("EMAIL_MONITOR_CONFIG", "./config.json")
         ).resolve()
 
         self.validate()
