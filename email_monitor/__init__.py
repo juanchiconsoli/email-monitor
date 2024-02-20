@@ -3,6 +3,7 @@ from typing import Dict, List
 from datetime import datetime
 from pathlib import Path
 import typer
+
 from email_monitor.clients import ClientService
 from email_monitor.console import console
 from email_monitor.conifg import Config, InvalidConfig

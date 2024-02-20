@@ -6,10 +6,10 @@ Pour lancer l'application avec docker vous devez construir l'image d'abbord:
 
 ## Utilisation
 
-Pout l'utiliser vous devez simplement utiliser, les menus d'aide:
+Pout l'utiliser vous devez simplement vous servir des menus d'aide:
 
 `docker run monitor --help`
 
-chage commande enfant a sa propre documentation:
+chaque commande enfant a sa propre documentation:
 
 `docker run monitor clients --help`

@@ -1,12 +1,13 @@
 from datetime import datetime
 from typing import Dict, List, Union
 from pydantic import BaseModel
-from email_monitor.conifg import PASS_KEYWORDS, InvalidConfig
-from email_monitor.console import console
-from email_monitor.clients import ClientService
 import imaplib
 import email as emailib
 from email.header import decode_header
+
+from email_monitor.conifg import PASS_KEYWORDS, InvalidConfig
+from email_monitor.console import console
+from email_monitor.clients import ClientService
 
 
 class EmailBackup(BaseModel):

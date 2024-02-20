@@ -1,10 +1,8 @@
-import json
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import List
 from pydantic import BaseModel, EmailStr
 from rich.table import Table
-from email_monitor.conifg import Config
 
+from email_monitor.conifg import Config
 from email_monitor.console import console
 
 
