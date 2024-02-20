@@ -15,12 +15,10 @@ app_config = Config()
 
 
 @app.command("clients")
-def receive(
-    config: Path = typer.Option(
-        None, help="Racine du fichier de configuration alternatif"
-    )
+def show_clients(
+    config: Path = typer.Option(None, help="Path to alternative configuration file")
 ):
-    """Afficher la list de client dans le fichier de configuration"""
+    """Show the list of backups in the config file"""
     try:
         if config:
             app_config.set_config_file(config)
@@ -40,11 +38,9 @@ def receive(
 
 @app.command("emails")
 def get_emails(
-    config: Path = typer.Option(
-        None, help="Racine du fichier de configuration alternatif"
-    )
+    config: Path = typer.Option(None, help="Path to alternative configuration file")
 ):
-    """Afficher tous les emails de sauvegarde"""
+    """Show all backup emails: They have to had the word 'Sauvegarde' in the subject"""
 
     try:
         if config:
@@ -71,12 +67,10 @@ def get_emails(
 
 @app.command("backups")
 def sauvegardes(
-    config: Path = typer.Option(
-        None, help="Racine du fichier de configuration alternatif"
-    ),
-    date: str = typer.Argument(None, help="Date des sauvegardes: dd-mm-yyyy"),
+    config: Path = typer.Option(None, help="Path to alternative configuration file"),
+    date: str = typer.Argument(None, help="Date to retrieve backups from: dd-mm-yyyy"),
 ):
-    """Afficher la table des clients et sauvegardes"""
+    """Show the table of bakcups for the give date"""
     try:
 
         results = _get_backup_results(config, date)
@@ -97,14 +91,12 @@ def sauvegardes(
 
 @app.command("send-report")
 def report(
-    config: Path = typer.Option(
-        None, help="Racine du fichier de configuration alternatif"
-    ),
+    config: Path = typer.Option(None, help="Path to alternative configuration file"),
     to_address: str = typer.Option(
         ..., "--to-address", "-t", help="Address to write to"
     ),
     subject: str = typer.Option(..., "--subject", "-s", help="Email's subject"),
-    date: str = typer.Argument(None, help="Date des sauvegardes: dd-mm-yyyy"),
+    date: str = typer.Argument(None, help="Date to retrieve backups from: dd-mm-yyyy"),
 ):
     console.print(f"Sending email to {to_address}...")
 
