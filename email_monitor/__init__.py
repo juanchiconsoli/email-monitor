@@ -111,8 +111,6 @@ def report(
 
         client_config = app_config.get_email_config()
 
-        console.print(html_table)
-
         smtp_client = SMTPClient(
             username=client_config["email"],
             password=client_config["password"],

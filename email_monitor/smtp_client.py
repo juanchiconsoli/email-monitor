@@ -1,4 +1,3 @@
-import os
 from email.header import Header
 from email.utils import formataddr
 import smtplib
@@ -42,16 +41,18 @@ class SMTPClient:
             )
 
             msg["From"] = formataddr(
-                (str(Header("Compfarm Monitor", "utf-8")), f"{self.username}")
+                (str(Header("ITWORK Monitor", "utf-8")), f"{self.username}")
             )
             msg["To"] = to_address
             msg["Subject"] = subject
 
             # Establish a connection to the SMTP server
-            server = smtplib.SMTP(
-                host=self.smtp_server, port=self.smtp_port, timeout=10
+            server = smtplib.SMTP_SSL(
+                host=self.smtp_server,
+                port=self.smtp_port,
+                timeout=10,
             )
-            server.starttls()  # Upgrade the connection to a secure SSL connection
+            # server.starttls()  # Upgrade the connection to a secure SSL connection
 
             if self.password:
                 server.login(self.username, self.password)  # Login to the SMTP server
