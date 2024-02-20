@@ -232,6 +232,14 @@ def _build_html_results_table(results: Dict[str, List[EmailBackup]]) -> str:
                     tr:hover {
                         background-color: #ddd;
                     }
+                    .success {
+                        color: green;
+                        font-weight: bold;
+                    }
+                    .failure {
+                        color: red;
+                        font-weight: bold;
+                    }
                 </style>
             </head>"""
 
@@ -249,16 +257,16 @@ def _build_html_results_table(results: Dict[str, List[EmailBackup]]) -> str:
 
             if last_email.has_passed():
                 status = "Success"
+                klass = "success"
             else:
                 status = "Failure"
+                klass = "failure"
 
-            report_html += f'<tr><td>{client}</td><td>{last_email.subject}</td><td>{last_email.date.strftime("%A, %d %B %Y %I:%M %p")}</td><td>{status}</td>'
+            report_html += f'<tr><td>{client}</td><td>{last_email.subject}</td><td>{last_email.date.strftime("%A, %d %B %Y %I:%M %p")}</td><td class="{klass}">{status}</td>'
 
         except IndexError:
 
-            report_html += (
-                f"<tr><td>{client}</td><td>-</td><td>Missing</td><td>Failure</td>"
-            )
+            report_html += f'<tr><td>{client}</td><td>-</td><td>Missing</td><td class="failure">Failure</td>'
 
     report_html = report_html + "</tbody></table></body></html>"
 
