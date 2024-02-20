@@ -101,7 +101,7 @@ def report(
         None, help="Racine du fichier de configuration alternatif"
     ),
     to_address: str = typer.Option(
-        ..., "--to_address", "-t", help="Address to write to"
+        ..., "--to-address", "-t", help="Address to write to"
     ),
     subject: str = typer.Option(..., "--subject", "-s", help="Email's subject"),
     date: str = typer.Argument(None, help="Date des sauvegardes: dd-mm-yyyy"),
@@ -119,7 +119,7 @@ def report(
 
         client_config = app_config.get_email_config()
 
-        console.print(client_config)
+        console.print(html_table)
 
         smtp_client = SMTPClient(
             username=client_config["email"],
