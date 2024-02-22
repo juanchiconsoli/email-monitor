@@ -8,6 +8,7 @@ from email_monitor.console import console
 
 
 PASS_KEYWORDS = ["success", "succès", "reusit"]
+WARNING_KEYWORDS = ["warning"]
 
 
 class InvalidConfig(Exception): ...

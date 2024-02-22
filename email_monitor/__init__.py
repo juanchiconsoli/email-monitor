@@ -241,6 +241,10 @@ def _build_html_results_table(results: Dict[str, List[EmailBackup]]) -> str:
                         color: red;
                         font-weight: bold;
                     }
+                    .warning {
+                        color: #FFBF00;
+                        font-weight: bold;
+                    }
                 </style>
             </head>"""
 
@@ -256,14 +260,9 @@ def _build_html_results_table(results: Dict[str, List[EmailBackup]]) -> str:
         try:
             last_email: EmailBackup = results[client][-1]
 
-            if last_email.has_passed():
-                status = "Success"
-                klass = "success"
-            else:
-                status = "Failure"
-                klass = "failure"
+            status = last_email.get_status()
 
-            report_html += f'<tr><td>{client}</td><td>{last_email.subject}</td><td>{last_email.date.strftime("%A, %d %B %Y %I:%M %p")}</td><td class="{klass}">{status}</td>'
+            report_html += f'<tr><td>{client}</td><td>{last_email.subject}</td><td>{last_email.date.strftime("%A, %d %B %Y %I:%M %p")}</td><td class="{status}">{status.title()}</td>'
 
         except IndexError:
 

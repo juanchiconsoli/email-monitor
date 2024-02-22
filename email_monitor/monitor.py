@@ -5,7 +5,7 @@ import imaplib
 import email as emailib
 from email.header import decode_header
 
-from email_monitor.conifg import PASS_KEYWORDS, InvalidConfig
+from email_monitor.conifg import PASS_KEYWORDS, WARNING_KEYWORDS, InvalidConfig
 from email_monitor.console import console
 from email_monitor.clients import ClientService
 
@@ -28,6 +28,15 @@ class EmailBackup(BaseModel):
             pass_keywords = PASS_KEYWORDS
 
         return any(pass_key in self.subject.lower() for pass_key in pass_keywords)
+
+    def get_status(self):
+
+        if any(pass_key in self.subject.lower() for pass_key in PASS_KEYWORDS):
+            return "success"
+        elif any(pass_key in self.subject.lower() for pass_key in WARNING_KEYWORDS):
+            return "warning"
+        else:
+            return "failure"
 
 
 class EmailClient:
