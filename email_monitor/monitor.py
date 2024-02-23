@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, List, Union
 from pydantic import BaseModel
 import imaplib
@@ -132,8 +132,13 @@ class EmailClient:
 
     @staticmethod
     def get_date_imap_query(date: datetime) -> str:
+
+        twenty_four_hours_ago = date - timedelta(hours=24)
+
+        twenty_four_hours_ago_str = twenty_four_hours_ago.strftime("%d-%b-%Y")
         date_str = date.strftime("%d-%b-%Y")
-        return f'(SENTON "{date_str}")'
+
+        return f'(SINCE "{twenty_four_hours_ago_str}")'
 
 
 class Monitor:
@@ -145,12 +150,19 @@ class Monitor:
 
     def get_backups(self, date: datetime):
 
+        twenty_four_hours_ago = date - timedelta(hours=24)
+
         emails = self.email_client.get_all_emails(EmailClient.get_date_imap_query(date))
 
         emails.sort(key=lambda obj: obj.date)
 
-        if date:
-            emails = [e for e in emails if e.date.date() == date.date()]
+        emails = [
+            e
+            for e in emails
+            if twenty_four_hours_ago.replace(tzinfo=e.date.tzinfo)
+            <= e.date
+            <= date.replace(tzinfo=e.date.tzinfo)
+        ]
 
         result_dict = {
             key: [item for item in emails if key in item.subject]
