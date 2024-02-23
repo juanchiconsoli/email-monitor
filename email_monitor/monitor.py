@@ -95,7 +95,7 @@ class EmailClient:
             try:
                 raw_email_data = self.fetch_email(email_id)
                 msg = message_from_bytes(raw_email_data)
-                subject = msg.get("Subject")
+                subject = self.decode_subject(msg.get("Subject"))
                 sender = msg.get("From")
 
                 date = parsedate_to_datetime(msg.get("Date"))

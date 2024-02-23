@@ -274,4 +274,4 @@ def _build_html_results_table(results: Dict[str, List[EmailBackup]]) -> str:
 
 
 if __name__ == "__main__":
-    get_emails()
+    sauvegardes(date=None, config=None)
