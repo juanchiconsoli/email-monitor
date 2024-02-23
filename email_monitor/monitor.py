@@ -2,7 +2,8 @@ from datetime import datetime
 from typing import Dict, List, Union
 from pydantic import BaseModel
 import imaplib
-import email as emailib
+from email import message_from_bytes
+from email.utils import parsedate_to_datetime
 from email.header import decode_header
 
 from email_monitor.conifg import PASS_KEYWORDS, WARNING_KEYWORDS, InvalidConfig
@@ -90,19 +91,23 @@ class EmailClient:
         email_ids = self.search_emails()
 
         for email_id in email_ids[1][0].split():
-            raw_email_data = self.fetch_email(email_id)
-            msg = emailib.message_from_bytes(raw_email_data)
-            subject = msg.get("Subject")
-            sender = msg.get("From")
-            date = msg.get("Date")
 
-            if subject:
-                if criteria in subject.lower():
-                    email_subjects.append(
-                        EmailBackup(
-                            subject=subject, sender=sender, date=_parse_dates(date)
+            try:
+                raw_email_data = self.fetch_email(email_id)
+                msg = message_from_bytes(raw_email_data)
+                subject = msg.get("Subject")
+                sender = msg.get("From")
+
+                date = parsedate_to_datetime(msg.get("Date"))
+
+                if subject:
+                    if criteria in subject.lower():
+                        email_subjects.append(
+                            EmailBackup(subject=subject, sender=sender, date=date)
                         )
-                    )
+            except ValueError as ex:
+                console.log_warning(ex)
+                console.log_warning(f"Skipping email {subject}")
 
         return email_subjects
 
@@ -150,16 +155,3 @@ class Monitor:
     @property
     def _client_names(self):
         return [c.name for c in self.clients]
-
-
-def _parse_dates(date_string: str):
-    try:
-        date_format = "%a, %d %b %Y %H:%M:%S %z"
-
-        parsed_date = datetime.strptime(date_string, date_format)
-
-        return parsed_date
-
-    except Exception:
-        console.log_warning(f"Could not parse {date_string} as a date")
-        return date_string
