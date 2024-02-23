@@ -52,7 +52,7 @@ def get_emails(
 
         if date:
             date = datetime.strptime(date, "%d-%m-%Y")
-            search_query = Monitor.get_date_imap_query(date)
+            search_query = EmailClient.get_date_imap_query(date)
 
         client = EmailClient.from_config(app_config.get_email_config())
         client.connect()

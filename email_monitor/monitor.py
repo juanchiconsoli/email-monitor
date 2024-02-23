@@ -130,6 +130,11 @@ class EmailClient:
             self.mail.logout()
             self.mail = None
 
+    @staticmethod
+    def get_date_imap_query(date: datetime) -> str:
+        date_str = date.strftime("%d-%b-%Y")
+        return f'(SENTON "{date_str}")'
+
 
 class Monitor:
     def __init__(
@@ -140,7 +145,7 @@ class Monitor:
 
     def get_backups(self, date: datetime):
 
-        emails = self.email_client.get_all_emails(self.get_date_imap_query(date))
+        emails = self.email_client.get_all_emails(EmailClient.get_date_imap_query(date))
 
         emails.sort(key=lambda obj: obj.date)
 
@@ -157,8 +162,3 @@ class Monitor:
     @property
     def _client_names(self):
         return [c.name for c in self.clients]
-
-    @staticmethod
-    def get_date_imap_query(date: datetime) -> str:
-        date_str = date.strftime("%d-%b-%Y")
-        return f'(SENTON "{date_str}")'
