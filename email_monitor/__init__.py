@@ -271,7 +271,3 @@ def _build_html_results_table(results: Dict[str, List[EmailBackup]]) -> str:
     report_html = report_html + "</tbody></table></body></html>"
 
     return report_html
-
-
-if __name__ == "__main__":
-    sauvegardes(date=None, config=None)
