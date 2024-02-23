@@ -82,21 +82,23 @@ class EmailClient:
         _, data = self.mail.fetch(email_id, "(RFC822)")
         return data[0][1]
 
-    def get_all_emails(self, criteria: str = "sauvegarde") -> List[EmailBackup]:
+    def get_all_emails(
+        self, imap_query="ALL", criteria: str = "sauvegarde"
+    ) -> List[EmailBackup]:
         if not self.mail:
             raise Exception("You need to connect first")
 
         email_subjects = []
 
-        email_ids = self.search_emails()
+        email_ids = self.search_emails(criteria=imap_query)
 
         for email_id in email_ids[1][0].split():
 
             try:
                 raw_email_data = self.fetch_email(email_id)
                 msg = message_from_bytes(raw_email_data)
-                subject = self.decode_subject(msg.get("Subject"))
-                sender = msg.get("From")
+                subject = self.decode_part(msg.get("Subject"))
+                sender = self.decode_part(msg.get("From"))
 
                 date = parsedate_to_datetime(msg.get("Date"))
 
@@ -111,7 +113,7 @@ class EmailClient:
 
         return email_subjects
 
-    def decode_subject(self, subject):
+    def decode_part(self, subject):
         decoded_subject = []
         for part, encoding in decode_header(subject):
             if isinstance(part, bytes):
@@ -136,9 +138,9 @@ class Monitor:
         self.clients = client_service.get_all()
         self.email_client = email_client
 
-    def get_backups(self, date: datetime = None):
+    def get_backups(self, date: datetime):
 
-        emails = self.email_client.get_all_emails()
+        emails = self.email_client.get_all_emails(self.get_date_imap_query(date))
 
         emails.sort(key=lambda obj: obj.date)
 
@@ -155,3 +157,8 @@ class Monitor:
     @property
     def _client_names(self):
         return [c.name for c in self.clients]
+
+    @staticmethod
+    def get_date_imap_query(date: datetime) -> str:
+        date_str = date.strftime("%d-%b-%Y")
+        return f'(SENTON "{date_str}")'

@@ -39,19 +39,26 @@ def show_clients(
 
 @app.command("emails")
 def get_emails(
-    config: Path = typer.Option(None, help="Path to alternative configuration file")
+    config: Path = typer.Option(None, help="Path to alternative configuration file"),
+    date: str = typer.Argument(None, help="Date to retrieve backups from: dd-mm-yyyy"),
 ):
     """Show all backup emails: They have to had the word 'Sauvegarde' in the subject"""
+
+    search_query = "ALL"
 
     try:
         if config:
             app_config.set_config_file(config)
 
+        if date:
+            date = datetime.strptime(date, "%d-%m-%Y")
+            search_query = Monitor.get_date_imap_query(date)
+
         client = EmailClient.from_config(app_config.get_email_config())
         client.connect()
         client.select_mailbox()
 
-        emails = client.get_all_emails()
+        emails = client.get_all_emails(search_query)
 
         client.logout()
 
