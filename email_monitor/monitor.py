@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from time import mktime
 from typing import Dict, List, Union
 from pydantic import BaseModel
 import imaplib
@@ -82,6 +83,12 @@ class EmailClient:
         _, data = self.mail.fetch(email_id, "(RFC822)")
         return data[0][1]
 
+    def fetch_email_date(self, email_id):
+        if not self.mail:
+            raise Exception("You need to connect first")
+        _, data = self.mail.fetch(email_id, "(INTERNALDATE)")
+        return data[0]
+
     def get_all_emails(
         self, imap_query="ALL", criteria: str = "sauvegarde"
     ) -> List[EmailBackup]:
@@ -100,7 +107,8 @@ class EmailClient:
                 subject = self.decode_part(msg.get("Subject"))
                 sender = self.decode_part(msg.get("From"))
 
-                date = parsedate_to_datetime(msg.get("Date"))
+                email_date = self.fetch_email_date(email_id)
+                date = self.decode_date(email_date)
 
                 if subject:
                     if criteria in subject.lower():
@@ -124,6 +132,11 @@ class EmailClient:
                     part = part.decode()
             decoded_subject.append(part)
         return "".join(decoded_subject)
+
+    def decode_date(self, date: bytes):
+        timestruct = imaplib.Internaldate2tuple(date)
+        datetime_delivered = datetime.fromtimestamp(mktime(timestruct))
+        return datetime_delivered
 
     def logout(self):
         if self.mail:
